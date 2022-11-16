@@ -1,4 +1,4 @@
 from . import *
 
 
-__all__=["business","enterprise"]
+__all__=["user_activity_log"]
