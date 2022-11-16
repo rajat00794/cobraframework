@@ -25,6 +25,18 @@ class LoadComponents:
     async def install(self, package):
         if hasattr(pip, "main"):
             pip.main(["install", package])
+            dirs=package.split("=")
+            dirsd=None
+            if "/" in dirs[-1]:
+                dirsd=dirs[-1].split("/")[-1]
+            else:
+                dirsd=dirs[-1]
+            print(dirsd)
+            os.makedirs(dirsd)
+            os.chdir(dirsd)
+            with open("__init__.py","w+") as fs:
+                fs.writelines(f"from {dirsd} import business,enterprise")
+                fs.close()
         else:
             pip._internal.main(["install", package])
 
