@@ -5,7 +5,7 @@ import setuptools
 
 
 setuptools.setup(
-    name=str(os.getcwd()),
+    name=os.getcwd().split("/")[-1],
     version="0.0.1",
     author="Example Author",
     author_email="author@example.com",
