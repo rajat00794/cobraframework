@@ -1,4 +1,4 @@
-from dotenv import load_dotenv
+from . import config, errors, mongoadaptor, utils
 
 
-load_dotenv(".env")
+dependency_common_utilities = [True]

@@ -3,7 +3,6 @@ import os
 import setuptools
 
 
-
 setuptools.setup(
     name=os.getcwd().split("/")[-1],
     version="0.0.1",

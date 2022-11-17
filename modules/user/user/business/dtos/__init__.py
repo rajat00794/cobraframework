@@ -1,1 +1,1 @@
-from . import blacklistoken,otp,permission,role,user
+from . import blacklistoken, otp, permission, role, user

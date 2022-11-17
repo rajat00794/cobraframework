@@ -2,19 +2,31 @@
 import asyncio
 import json
 import os
-
 import click
 from adaptors.mongodb.mongoadaptor import DataBaseManager
 from flask import Blueprint
-from infrastructure.server.app.application.service import str_import
 from infrastructure.shared_di.di import obj_graph
 
 usersbp = Blueprint("load_data", __name__)
 
 
-dependency_modules=[]
-dependency_adaptors=["mongodb"]
-dependency_common_utilities=[True]
+dependency_modules = []
+dependency_adaptors = ["mongodb"]
+dependency_common_utilities = [True]
+
+
+def str_import(module, classname):
+    """_summary_
+
+    Args:
+        name (_type_): _description_
+
+    Returns:
+        _type_: _description_
+    """
+    module = importlib.import_module(module)
+    return getattr(module, classname)
+
 
 @usersbp.cli.command("create")
 @click.argument("name")

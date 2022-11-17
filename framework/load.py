@@ -150,12 +150,21 @@ class LoadComponents:
             else:
                 os.chdir(kwargs.get("path"))
             try:
-                await self.install(
-                    self.FRAMEWORK_REGISTRY
-                    + kwargs.get("type")
-                    + "/"
-                    + kwargs.get("name")
-                )
+                if kwargs.get("type") == "adaptors":
+                    await self.install(
+                        self.FRAMEWORK_REGISTRY
+                        + kwargs.get("type")
+                        + "/"
+                        + kwargs.get("name"),
+                        adaptors=True,
+                    )
+                else:
+                    await self.install(
+                        self.FRAMEWORK_REGISTRY
+                        + kwargs.get("type")
+                        + "/"
+                        + kwargs.get("name")
+                    )
             except Exception as e:
                 return ResponseCommand(response=e, process_status=False)
             if "path" not in list(kwargs.keys()):
@@ -173,12 +182,21 @@ class LoadComponents:
             else:
                 os.chdir(kwargs.get("path"))
             try:
-                await self.install(
-                    self.FRAMEWORK_REGISTRY
-                    + kwargs.get("type")
-                    + "/"
-                    + kwargs.get("name")
-                )
+                if kwargs.get("type") == "adaptors":
+                    await self.install(
+                        self.FRAMEWORK_REGISTRY
+                        + kwargs.get("type")
+                        + "/"
+                        + kwargs.get("name"),
+                        adaptors=True,
+                    )
+                else:
+                    await self.install(
+                        self.FRAMEWORK_REGISTRY
+                        + kwargs.get("type")
+                        + "/"
+                        + kwargs.get("name")
+                    )
             except Exception as e:
                 return e
             if "path" not in list(kwargs.keys()):
