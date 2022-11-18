@@ -93,8 +93,7 @@ def framework_commands(
                 for iw in iu.keys():
                     if iw.startswith("load"):
                         loadm = LoadComponents()
-                        data = asyncio.run(loadm.load(**iu[iw]))
-                        print(data)
+                        asyncio.run(loadm.load(**iu[iw]))
     click.echo(formateded_args)
 
 
