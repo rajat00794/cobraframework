@@ -25,8 +25,6 @@ def formet_args(**kwargs):
         final_args.append({k: args})
         args = []
     return final_args
-
-
 @click.command()
 @click.option("--load_module", default={})
 @click.option("--load_application", default={})
@@ -93,8 +91,7 @@ def framework_commands(
                 for iw in iu.keys():
                     if iw.startswith("load"):
                         loadm = LoadComponents()
-                        data = asyncio.run(loadm.load(**iu[iw]))
-                        print(data)
+                        data = asyncio.run(loadm.load(**iu[iw])) 
     click.echo(formateded_args)
 
 
