@@ -27,6 +27,15 @@ def formet_args(**kwargs):
     return final_args
 
 
+def mapload(n):
+    try:
+        json.loads(n)
+    except Exception as e:
+        n = bool(n)
+        return n
+    return False
+
+
 @click.command()
 @click.option("--load_module", default={})
 @click.option("--load_application", default={})
@@ -82,6 +91,11 @@ def framework_commands(
     create = [x for x in create if x[list(x.keys())[0]] != "{}"]
     generator = [x for x in generator if x[list(x.keys())[0]] != "{}"]
     deployment = [x for x in deployment if x[list(x.keys())[0]] != "{}"]
+    load_data = [x for x in list(map(mapload, load)) if x]
+    if load_data != []:
+        loadm = LoadComponents()
+        data = asyncio.run(loadm.load_from_configfile())
+        print(data)
     formateded_args = formet_args(
         load=load, create=create, generator=generator, deployment=deployment
     )

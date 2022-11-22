@@ -1,0 +1,1 @@
+[{"type":"modules","init":"from {} import business,enterprise"},{"type":"adaptors","init":"import {}"},{"type":"common_utilities","init":"import {}"},{"type":"app","init":"from {} import routes"}]

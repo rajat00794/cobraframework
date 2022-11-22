@@ -31,7 +31,21 @@ class LoadComponents:
                 "FRAMEWORK_REGISTRY"
             ]
 
-    async def install(self, package, app=None, adaptors=None, common_utilities=None):
+    async def load_from_configfile(self):
+        """_summary_"""
+        with open("config.json", "rb") as fs:
+            data = json.load(fs)
+        for k, v in data.items():
+            if k == "appwiseconfig":
+                for h, j in v.items():
+                    if h == "appconfig":
+                        for p in j:
+                            await self.load_application(**p)
+            else:
+                for tr in v:
+                    await self.modules(**tr)
+
+    async def install(self, package):
         """_summary_
 
         Args:
@@ -53,15 +67,21 @@ class LoadComponents:
             os.makedirs(dirsd, exist_ok=True)
             os.chdir(dirsd)
             with open("__init__.py", "w+") as fs:
-                if app is None and adaptors is None and common_utilities is None:
-                    fs.writelines(f"from {dirsd} import business,enterprise")
-                elif app is not None:
-                    fs.writelines(f"from {dirsd} import routes")
-                elif adaptors is not None:
-                    fs.writelines(f"import {dirsd}")
-                elif common_utilities is not None:
-                    fs.writelines(f"import {dirsd}")
-
+                dirsdd = None
+                if "/" in dirs[-1]:
+                    print(dirs[-1])
+                    dirsdd = dirs[-1].split("/")[0]
+                else:
+                    dirsdd = dirs[0]
+                os.chdir(os.getenv("APPROOT"))
+                with open(".framework.json", "rb") as fd:
+                    der = json.loads(fd.read())
+                if dirsdd == "infrastructure":
+                    dirsdd = "app"
+                for j in der:
+                    if j["type"] == dirsdd:
+                        fs.writelines(j["init"].format(dirsd))
+                fd.close()
                 fs.close()
                 return ResponseCommand(
                     response="package installed and module initiated",
@@ -97,83 +117,24 @@ class LoadComponents:
         ):
             return await self.modules(**kwargs)
         elif "type" in list(kwargs.keys()) and kwargs["type"] == "common_utilities":
-            return await self.modules(common_utilities=True, **kwargs)
+            return await self.modules(**kwargs)
         elif "type" in list(kwargs.keys()) and kwargs["type"] == "application":
             return await self.load_application(**kwargs)
         return ResponseCommand(
             response="type and from kwargs are required", process_status=False
         )
 
-    async def modules(self, common_utilities=None, **kwargs):
+    async def modules(self, **kwargs):
         """_summary_
 
         Returns:
             _type_: _description_
         """
-        if "type" in list(kwargs.keys()) and kwargs["type"] == "modules":
-            if "path" not in list(kwargs.keys()):
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                }
-            else:
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                    "path": kwargs.get("path"),
-                }
-
-            resp = await self.from_(**data)
-            return ResponseCommand(response=resp.response, process_status=True)
-        elif "type" in list(kwargs.keys()) and kwargs["type"] == "adaptors":
-            if "path" not in list(kwargs.keys()):
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                }
-            else:
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                    "path": kwargs.get("path"),
-                }
-        elif common_utilities is not None:
-            if "path" not in list(kwargs.keys()):
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": "",
-                    "type": kwargs.get("type"),
-                }
-            else:
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": "",
-                    "type": kwargs.get("type"),
-                    "path": kwargs.get("path"),
-                }
-
-            resp = await self.from_(common_utilities=True, **data)
-        else:
-            if "path" not in list(kwargs.keys()):
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                }
-            else:
-                data = {
-                    "from": kwargs.get("from"),
-                    "name": kwargs.get("name"),
-                    "type": kwargs.get("type"),
-                    "path": kwargs.get("path"),
-                }
-
-            resp = await self.from_(**data)
-            return ResponseCommand(response=resp.response, process_status=True)
+        print(kwargs)
+        for k, v in kwargs.items():
+            if k == "config":
+                data = await self.from_(**v)
+                return ResponseCommand(response=str(data), process_status=True)
 
     async def load_app_config(self, app_config: dict):
         """_summary_
@@ -185,11 +146,7 @@ class LoadComponents:
             _type_: _description_
         """
         final = []
-        for io in [
-            app_config["dependency_modules"],
-            app_config["dependency_adaptors"],
-            app_config["dependency_common_utilities"],
-        ]:
+        for io in [app_config["dependency_modules"], app_config["dependency_adaptors"]]:
             subpackage = []
             for m in io:
                 if type(m) != bool:
@@ -208,7 +165,7 @@ class LoadComponents:
                             url_subpackage = (
                                 self.FRAMEWORK_REGISTRY + f"common_utilities"
                             )
-                            await self.install(url_subpackage, common_utilities=True)
+                            await self.install(url_subpackage)
                             os.chdir("../")
                             subpackage.append({"common_utilities": True})
                         else:
@@ -223,29 +180,17 @@ class LoadComponents:
         Returns:
             _type_: _description_
         """
-        if "from" in list(kwargs.keys()) and kwargs["from"] == "FRAMEWORK_REGISTRY":
-            with open("config.json", "rb") as fs:
-                data = json.load(fs)
-            name = kwargs.get("name")
-            url = (
-                self.FRAMEWORK_REGISTRY
-                + f"infrastructure/server/app/application/{name}"
-            )
-            app_config = map(
-                self.load_app_config,
-                [
-                    x["config"]
-                    for x in data["appconfig"]
-                    if x["appname"] == kwargs.get("name")
-                ],
-            )
-            pprint([await x for x in list(app_config)])
-            os.chdir(data["app_root"])
-            os.chdir(data["app_path"])
-            await self.install(url, app=True)
-            return ResponseCommand(response="app loaded", process_status=True)
+        name = kwargs.get("appname")
+        Approot = os.getenv("APPROOT")
+        Appath = os.getenv("Apppath")
+        url = self.FRAMEWORK_REGISTRY + f"{Appath}/{name}"
+        await self.load_app_config(kwargs.get("config"))
+        os.chdir(Approot)
+        os.chdir(Appath)
+        await self.install(url)
+        return ResponseCommand(response="app loaded", process_status=True)
 
-    async def from_(self, common_utilities=None, **kwargs):
+    async def from_(self, **kwargs):
         """_summary_
 
         Returns:
@@ -255,29 +200,18 @@ class LoadComponents:
         if "from" in list(kwargs.keys()) and kwargs["from"] == "FRAMEWORK_REGISTRY":
             if "path" not in list(kwargs.keys()):
                 print(os.listdir("."))
+                os.chdir(os.getenv("APPROOT"))
                 os.chdir(kwargs.get("type"))
             else:
+                os.chdir(os.getenv("APPROOT"))
                 os.chdir(kwargs.get("path"))
             try:
-                if kwargs.get("type") == "adaptors":
-                    await self.install(
-                        self.FRAMEWORK_REGISTRY
-                        + kwargs.get("type")
-                        + "/"
-                        + kwargs.get("name"),
-                        adaptors=True,
-                    )
-                elif common_utilities is not None:
-                    await self.install(self.FRAMEWORK_REGISTRY+ kwargs.get("type")
-                        ,common_utilities=True,
-                    )
-                else:
-                    await self.install(
-                        self.FRAMEWORK_REGISTRY
-                        + kwargs.get("type")
-                        + "/"
-                        + kwargs.get("name")
-                    )
+                await self.install(
+                    self.FRAMEWORK_REGISTRY
+                    + kwargs.get("type")
+                    + "/"
+                    + kwargs.get("name")
+                )
             except Exception as e:
                 return ResponseCommand(response=str(e), process_status=False)
             if "path" not in list(kwargs.keys()):
@@ -295,21 +229,12 @@ class LoadComponents:
             else:
                 os.chdir(kwargs.get("path"))
             try:
-                if kwargs.get("type") == "adaptors":
-                    await self.install(
-                        self.FRAMEWORK_REGISTRY
-                        + kwargs.get("type")
-                        + "/"
-                        + kwargs.get("name"),
-                        adaptors=True,
-                    )
-                else:
-                    await self.install(
-                        self.FRAMEWORK_REGISTRY
-                        + kwargs.get("type")
-                        + "/"
-                        + kwargs.get("name")
-                    )
+                await self.install(
+                    self.FRAMEWORK_REGISTRY
+                    + kwargs.get("type")
+                    + "/"
+                    + kwargs.get("name")
+                )
             except Exception as e:
                 return e
             if "path" not in list(kwargs.keys()):
