@@ -46,7 +46,17 @@ class Template(BaseModel):
             template = Template(
                 name=self.name,
                 type=self.type,
-                initfolders=[Initfolders(name="tests",files=[Initfiles(filename="__init__.py",content=["import {}".format(self.name)])])],
+                initfolders=[
+                    Initfolders(
+                        name="tests",
+                        files=[
+                            Initfiles(
+                                filename="__init__.py",
+                                content=["import {}".format(self.name)],
+                            )
+                        ],
+                    )
+                ],
                 initfiles=[
                     Initfiles(
                         filename=list(x.keys())[0].format(self.name),
@@ -60,4 +70,3 @@ class Template(BaseModel):
             )
             res.append(template)
         return res
-    
