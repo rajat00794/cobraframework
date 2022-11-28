@@ -116,9 +116,15 @@ class LoadComponents:
             or kwargs["config"]["type"] == "adaptors"
         ):
             return await self.modules(**kwargs)
-        elif "type" in list(kwargs["config"].keys()) and kwargs["config"]["type"] == "common_utilities":
+        elif (
+            "type" in list(kwargs["config"].keys())
+            and kwargs["config"]["type"] == "common_utilities"
+        ):
             return await self.modules(**kwargs)
-        elif "type" in list(kwargs["config"].keys()) and kwargs["config"]["type"] == "application":
+        elif (
+            "type" in list(kwargs["config"].keys())
+            and kwargs["config"]["type"] == "application"
+        ):
             return await self.load_application(**kwargs)
         return ResponseCommand(
             response="type and from kwargs are required", process_status=False

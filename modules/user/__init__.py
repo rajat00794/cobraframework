@@ -1,8 +1,7 @@
-from user import business,enterprise
+from user import business, enterprise
 
 
 di_args = [
     ("usermixin", enterprise.mixins.usermixin.UserMixin),
-    ("password", business.utils.password.Password)
-
+    ("password", business.utils.password.Password),
 ]

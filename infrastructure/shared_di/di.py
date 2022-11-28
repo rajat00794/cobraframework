@@ -7,7 +7,10 @@ from common_utilities.file_handler import FileUpload
 from user.business.utils.password import Password
 from user.enterprise.mixins.usermixin import UserMixin
 from common_utilities.validators import GetValidator
-from user_activity_log.enterprise.mixins.user_activity_log_mixin import UserActivityMixin
+from user_activity_log.enterprise.mixins.user_activity_log_mixin import (
+    UserActivityMixin,
+)
+
 
 class StartupLaneSpec(pinject.BindingSpec):
     """_summary_

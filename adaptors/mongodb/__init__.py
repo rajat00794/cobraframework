@@ -1,5 +1,5 @@
 import mongodb
-from mongodb import errors,mongoadaptor,config,dependency_common_utilities
+from mongodb import errors, mongoadaptor, config, dependency_common_utilities
 
 
 di_args = [
@@ -10,4 +10,4 @@ di_args = [
 ]
 
 
-__all__=["errors","di_args","mongoadaptor","config","dependency_common_utilities"]
+__all__ = ["errors", "di_args", "mongoadaptor", "config", "dependency_common_utilities"]
