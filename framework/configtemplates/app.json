@@ -1,0 +1,1 @@
+[{"appname":"{}","initfiles":[{"__init__.py":["from {} import routes,service"]},{"{}_service.py":[""]},{"{}_routes.py":[""]},{"{}_utils.py":[""]}]}]
