@@ -8,9 +8,11 @@ class AutoTestService(ABC):
     @abc.abstractmethod
     def __init__(self, app: object, utils: object) -> None:
         pass
+
     @abc.abstractmethod
     def load_test_conf(self) -> Dict[str, Any]:
         return
+
     @abc.abstractmethod
     def test_routes_functions(self) -> List[function]:
         return

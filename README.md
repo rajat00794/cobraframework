@@ -30,6 +30,7 @@
                     21. Learnning center for app and framework
                     22. Security modules for both web or api.
                     23. Auto App builder platform for cobra app objects usecases.app assistent for client,marketing,developers,oraganisations.
+                    24.App tree viewer with app admin app or module flow viewer.
                     future concepts:
                     1. Deployment servers.
                     2. Android builders.
@@ -46,5 +47,6 @@
                     13. support for Math,English,Sanskrit for hypothesis testing etc...
                     14. Time tech introduction for tech implementation and management.
                     15. paid courses and contents. 
+                    
 
 ### One line fullstack development framework using python for any system initialised with web supports async applications as well.
