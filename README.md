@@ -27,7 +27,7 @@
                     19. Gui Frontend code gen tools from figma or adobe xd.
                     20. App Assembler and config updater
                     21. App Archetechure Designing tools with modules segestions acording to App Documentation
-                    21. Learnning center for app and framework
+                    21. Learnning center for app and framework.
                     22. Security modules for both web or api.
                     23. Auto App builder platform for cobra app objects usecases.app assistent for client,marketing,developers,oraganisations.
                     24.App tree viewer with app admin app or module flow viewer.
